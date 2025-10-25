@@ -8,5 +8,7 @@ namespace Kaits.Domain.Models
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public string Dni { get; set; }
+
+        public virtual ICollection<Pedido> Pedidos { get; set; }
     }
 }
