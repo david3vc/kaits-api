@@ -11,6 +11,12 @@ namespace Kaits.Application.Services.Implementations
         private readonly IProductoRepository _productoRepository;
         private readonly IMapper _mapper;
 
+        public ProductoService(IProductoRepository productoRepository, IMapper mapper)
+        {
+            _productoRepository = productoRepository;
+            _mapper = mapper;
+        }
+
         public async Task<IReadOnlyList<ProductoDto>> FindAllAsync()
         {
             IReadOnlyList<Producto> productos = await _productoRepository.FindAllAsync();
