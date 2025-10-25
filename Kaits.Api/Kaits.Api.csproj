@@ -17,4 +17,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kaits.Application\Kaits.Application.csproj" />
+    <ProjectReference Include="..\Kaits.Core\Kaits.Core.csproj" />
+    <ProjectReference Include="..\Kaits.Infrastructure\Kaits.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

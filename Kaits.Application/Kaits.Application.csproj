@@ -13,4 +13,9 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kaits.Core\Kaits.Core.csproj" />
+    <ProjectReference Include="..\Kaits.Domain\Kaits.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

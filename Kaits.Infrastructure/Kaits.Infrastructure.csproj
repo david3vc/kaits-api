@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kaits.Core\Kaits.Core.csproj" />
+    <ProjectReference Include="..\Kaits.Domain\Kaits.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
