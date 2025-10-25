@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.Productos;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
@@ -30,7 +31,14 @@ namespace Kaits.Application.Services.Implementations
 
             Producto? producto = await _productoRepository.FindByIdAsync(predicate: predicate);
 
+            if (producto is null) throw ProductoNotFound(id);
+
             return _mapper.Map<ProductoDto>(producto);
+        }
+
+        private NotFoundCoreException ProductoNotFound(int id)
+        {
+            return new NotFoundCoreException("Producto no encontrado para el id: " + id);
         }
     }
 }

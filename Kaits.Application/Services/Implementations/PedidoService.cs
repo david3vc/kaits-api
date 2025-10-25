@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.Pedidos;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
@@ -19,6 +20,9 @@ namespace Kaits.Application.Services.Implementations
 
         public async Task<PedidoDto> CreateAsync(PedidoSaveDto saveDto)
         {
+            if (saveDto.IdCliente <= 0)
+                throw new BadRequestCoreException("IdCliente es obligatoria.");
+
             Pedido pedido = _mapper.Map<Pedido>(saveDto);
             pedido.FechaCreacion = DateTime.UtcNow;
             pedido.Estado = true;

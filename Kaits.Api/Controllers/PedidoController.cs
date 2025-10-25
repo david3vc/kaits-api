@@ -1,4 +1,5 @@
-﻿using Kaits.Application.Dtos.Pedidos;
+﻿using Kaits.Api.Exceptions;
+using Kaits.Application.Dtos.Pedidos;
 using Kaits.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,7 @@ namespace Kaits.Api.Controllers
         // POST api/values
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PedidoDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
         public async Task<Results<BadRequest, CreatedAtRoute<PedidoDto>>> Post([FromBody] PedidoSaveDto saveDto)
         {
             var response = await _pedidoService.CreateAsync(saveDto);
