@@ -3,7 +3,7 @@ using Kaits.Domain.Models;
 
 namespace Kaits.Domain.Repositories
 {
-    public interface IPedidoRepository : ICrudRepository<Pedido, int>
+    public interface IDetallePedidoRepository : ICrudRepository<DetallePedido, int>
     {
     }
 }

@@ -5,8 +5,8 @@ using Kaits.Infrastructure.Cores.Persistences;
 
 namespace Kaits.Infrastructure.Persistences
 {
-    public class PedidoRepository : CrudRepository<Pedido, int>, IPedidoRepository
+    public class DetallePedidoRepository : CrudRepository<DetallePedido, int>, IDetallePedidoRepository
     {
-        public PedidoRepository(ApplicationDbContext dbContext) : base(dbContext) { }
+        public DetallePedidoRepository(ApplicationDbContext dbContext) : base(dbContext) { }
     }
 }

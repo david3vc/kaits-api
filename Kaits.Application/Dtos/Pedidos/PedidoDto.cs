@@ -1,9 +1,4 @@
 ﻿using Kaits.Application.Dtos.Clientes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kaits.Application.Dtos.Pedidos
 {

@@ -1,9 +1,4 @@
 ﻿using Kaits.Domain.Cores.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kaits.Domain.Models
 {
@@ -14,5 +9,6 @@ namespace Kaits.Domain.Models
         public decimal Total { get; set; }
 
         public virtual Cliente Cliente { get; set; }
+        public virtual ICollection<DetallePedido> DetallePedidos { get; set; }
     }
 }
