@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.Pedidos;
+using Kaits.Application.Dtos.Productos;
+using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
 using System.Linq.Expressions;
@@ -61,6 +64,22 @@ namespace Kaits.Application.Services.Implementations
             IReadOnlyList<Pedido> pedidos = await _pedidoRepository.FindAllAsync();
 
             return _mapper.Map<IReadOnlyList<PedidoDto>>(pedidos);
+        }
+
+        public async Task<PageResponse<PedidoDto>> FindAllPaginatedAsync(PageRequest<PedidoFilterDto> request)
+        {
+            var filter = request.Filter ?? new PedidoFilterDto();
+            var paging = new Paging() { PageNumber = request.Page, PageSize = request.PerPage };
+
+            Expression<Func<Pedido, bool>> predicate = x =>
+                (!filter.Fecha.HasValue || x.Fecha == filter.Fecha)
+                && (!filter.IdCliente.HasValue || x.IdCliente == filter.IdCliente)
+                && (!filter.Total.HasValue || x.Total == filter.Total)
+                && (!filter.Estado.HasValue || x.Estado == filter.Estado);
+
+            var response = await _pedidoRepository.FindAllPaginatedAsync(paging: paging, predicate: predicate);
+
+            return _mapper.Map<PageResponse<PedidoDto>>(response);
         }
 
         public async Task<PedidoDto> FindByIdAsync(int id)

@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Kaits.Core\Kaits.Core.csproj" />
-  </ItemGroup>
-
 </Project>

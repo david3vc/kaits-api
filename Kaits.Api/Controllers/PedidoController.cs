@@ -1,6 +1,9 @@
 ﻿using Kaits.Api.Exceptions;
+using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Dtos.Pedidos;
+using Kaits.Application.Dtos.Productos;
 using Kaits.Application.Services;
+using Kaits.Application.Services.Implementations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +59,12 @@ namespace Kaits.Api.Controllers
         public async Task<PedidoDto> Delete(int id)
         {
             return await _pedidoService.DisabledAsync(id);
+        }
+
+        [HttpGet("PaginatedSearch")]
+        public async Task<PageResponse<PedidoDto>> PaginatedSearch([FromQuery] PageRequest<PedidoFilterDto> request)
+        {
+            return await _pedidoService.FindAllPaginatedAsync(request);
         }
     }
 }
