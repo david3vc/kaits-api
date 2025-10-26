@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Dtos.Clientes;
+using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
 using System.Linq.Expressions;
@@ -22,6 +24,23 @@ namespace Kaits.Application.Services.Implementations
             IReadOnlyList<Cliente> productos = await _clienteRepository.FindAllAsync();
 
             return _mapper.Map<IReadOnlyList<ClienteDto>>(productos);
+        }
+
+        public async Task<PageResponse<ClienteDto>> FindAllPaginatedAsync(PageRequest<ClienteFilterDto> request)
+        {
+            var filter = request.Filter ?? new ClienteFilterDto();
+            var paging = new Paging() { PageNumber = request.Page, PageSize = request.PerPage };
+
+            Expression<Func<Cliente, bool>> predicate = x =>
+                (string.IsNullOrWhiteSpace(filter.Nombres) || x.Nombres.ToUpper().Contains(filter.Nombres.ToUpper()))
+                && (string.IsNullOrWhiteSpace(filter.ApellidoPaterno) || x.ApellidoPaterno.ToUpper().Contains(filter.ApellidoPaterno.ToUpper()))
+                && (string.IsNullOrWhiteSpace(filter.ApellidoMaterno) || x.ApellidoMaterno.ToUpper().Contains(filter.ApellidoMaterno.ToUpper()))
+                && (string.IsNullOrWhiteSpace(filter.Dni) || x.Dni.ToUpper().Contains(filter.Dni.ToUpper()))
+                && (!filter.Estado.HasValue || x.Estado == filter.Estado);
+
+            var response = await _clienteRepository.FindAllPaginatedAsync(paging: paging, predicate: predicate);
+
+            return _mapper.Map<PageResponse<ClienteDto>>(response);
         }
 
         public async Task<ClienteDto> FindByIdAsync(int id)

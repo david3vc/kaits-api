@@ -1,4 +1,5 @@
-﻿using Kaits.Application.Dtos.Clientes;
+﻿using Kaits.Application.Cores.Dtos;
+using Kaits.Application.Dtos.Clientes;
 using Kaits.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,12 @@ namespace Kaits.Api.Controllers
             var response = await _clienteService.FindByIdAsync(id);
 
             return TypedResults.Ok(response);
+        }
+
+        [HttpGet("PaginatedSearch")]
+        public async Task<PageResponse<ClienteDto>> PaginatedSearch([FromQuery] PageRequest<ClienteFilterDto> request)
+        {
+            return await _clienteService.FindAllPaginatedAsync(request);
         }
     }
 }
