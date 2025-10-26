@@ -1,4 +1,5 @@
 ﻿using Kaits.Api.Exceptions;
+using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Dtos.Productos;
 using Kaits.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -32,6 +33,12 @@ namespace Kaits.Api.Controllers
             var response = await _productoService.FindByIdAsync(id);
 
             return TypedResults.Ok(response);
+        }
+
+        [HttpGet("PaginatedSearch")]
+        public async Task<PageResponse<ProductoDto>> PaginatedSearch([FromQuery] PageRequest<ProductoFilterDto> request)
+        {
+            return await _productoService.FindAllPaginatedAsync(request);
         }
     }
 }

@@ -3,7 +3,7 @@ using Kaits.Application.Dtos.Productos;
 
 namespace Kaits.Application.Services
 {
-    public interface IProductoService : IQueryService<ProductoDto, int>
+    public interface IProductoService : IQueryService<ProductoDto, int>, IPageService<ProductoDto, ProductoFilterDto>
     {
     }
 }

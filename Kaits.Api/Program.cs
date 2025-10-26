@@ -43,6 +43,14 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseCors(options =>
+{
+    options.AllowAnyHeader()
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .Build();
+});
+
 app.UseAuthorization();
 
 app.MapControllers();
