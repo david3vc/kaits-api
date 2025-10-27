@@ -2,7 +2,6 @@
 using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.Pedidos;
-using Kaits.Application.Dtos.Productos;
 using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
@@ -13,12 +12,14 @@ namespace Kaits.Application.Services.Implementations
     public class PedidoService : IPedidoService
     {
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IDetallePedidoService _detallePedidoService;
         private readonly IMapper _mapper;
 
-        public PedidoService(IPedidoRepository pedidoRepository, IMapper mapper)
+        public PedidoService(IPedidoRepository pedidoRepository, IMapper mapper, IDetallePedidoService detallePedidoService)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
+            _detallePedidoService = detallePedidoService;
         }
 
         public async Task<PedidoDto> CreateAsync(PedidoSaveDto saveDto)
@@ -31,6 +32,25 @@ namespace Kaits.Application.Services.Implementations
             pedido.Estado = true;
 
             await _pedidoRepository.SaveAsync(pedido);
+
+            #region DETALLE PEDIDO
+            if (saveDto.DetallePedidoSaveDtos.Any())
+            {
+                foreach (var detalle in saveDto.DetallePedidoSaveDtos)
+                {
+                    if (detalle.Id != null && detalle.Id != 0)
+                    {
+                        detalle.IdPedido = pedido.Id;
+                        await _detallePedidoService.EditAsync((int)detalle.Id, detalle);
+                    }
+                    else
+                    {
+                        detalle.IdPedido = pedido.Id;
+                        await _detallePedidoService.CreateAsync(detalle);
+                    }
+                }
+            }
+            #endregion
 
             return _mapper.Map<PedidoDto>(pedido);
         }
@@ -56,6 +76,25 @@ namespace Kaits.Application.Services.Implementations
 
             await _pedidoRepository.SaveAsync(pedido);
 
+            #region DETALLE PEDIDO
+            if (saveDto.DetallePedidoSaveDtos.Any())
+            {
+                foreach (var detalle in saveDto.DetallePedidoSaveDtos)
+                {
+                    if (detalle.Id != null && detalle.Id != 0)
+                    {
+                        detalle.IdPedido = pedido.Id;
+                        await _detallePedidoService.EditAsync((int)detalle.Id, detalle);
+                    }
+                    else
+                    {
+                        detalle.IdPedido = pedido.Id;
+                        await _detallePedidoService.CreateAsync(detalle);
+                    }
+                }
+            }
+            #endregion
+
             return _mapper.Map<PedidoDto>(pedido);
         }
 
@@ -71,13 +110,18 @@ namespace Kaits.Application.Services.Implementations
             var filter = request.Filter ?? new PedidoFilterDto();
             var paging = new Paging() { PageNumber = request.Page, PageSize = request.PerPage };
 
+            List<Expression<Func<Pedido, object>>>? includes = new List<Expression<Func<Pedido, object>>>()
+            {
+                t => t.Cliente
+            };
+
             Expression<Func<Pedido, bool>> predicate = x =>
                 (!filter.Fecha.HasValue || x.Fecha == filter.Fecha)
                 && (!filter.IdCliente.HasValue || x.IdCliente == filter.IdCliente)
                 && (!filter.Total.HasValue || x.Total == filter.Total)
                 && (!filter.Estado.HasValue || x.Estado == filter.Estado);
 
-            var response = await _pedidoRepository.FindAllPaginatedAsync(paging: paging, predicate: predicate);
+            var response = await _pedidoRepository.FindAllPaginatedAsync(paging: paging, predicate: predicate, includes: includes);
 
             return _mapper.Map<PageResponse<PedidoDto>>(response);
         }

@@ -9,7 +9,8 @@ namespace Kaits.Application.Dtos.Clientes.Profiles
     {
         public ClienteProfile()
         {
-            CreateMap<Cliente, ClienteDto>();
+            CreateMap<Cliente, ClienteDto>()
+                .AfterMap<ClienteProfileAction>();
             CreateMap<Cliente, ClienteFilterDto>().ReverseMap();
 
             CreateMap<PagedResult<Cliente>, PageResponse<ClienteDto>>();

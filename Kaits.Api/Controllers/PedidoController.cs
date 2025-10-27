@@ -1,9 +1,7 @@
 ﻿using Kaits.Api.Exceptions;
 using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Dtos.Pedidos;
-using Kaits.Application.Dtos.Productos;
 using Kaits.Application.Services;
-using Kaits.Application.Services.Implementations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
