@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.DetallePedidos;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace Kaits.Application.Services.Implementations
@@ -9,12 +11,14 @@ namespace Kaits.Application.Services.Implementations
     public class DetallePedidoService : IDetallePedidoService
     {
         private readonly IDetallePedidoRepository _detallePedidoRepository;
+        private readonly ILogger<DetallePedidoService> _logger;
         private readonly IMapper _mapper;
 
-        public DetallePedidoService(IDetallePedidoRepository detallePedidoRepository, IMapper mapper)
+        public DetallePedidoService(IDetallePedidoRepository detallePedidoRepository, IMapper mapper, ILogger<DetallePedidoService> logger)
         {
             _detallePedidoRepository = detallePedidoRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<DetallePedidoDto> CreateAsync(DetallePedidoSaveDto saveDto)
@@ -32,6 +36,12 @@ namespace Kaits.Application.Services.Implementations
         {
             DetallePedido? detallePedido = await _detallePedidoRepository.FindByIdAsync(id);
 
+            if (detallePedido is null)
+            {
+                _logger.LogWarning("DetallePedido no encontrado para el id: " + id);
+                throw DetallePedidoNotFound(id);
+            }
+
             detallePedido.Estado = !detallePedido.Estado;
 
             await _detallePedidoRepository.SaveAsync(detallePedido);
@@ -42,6 +52,12 @@ namespace Kaits.Application.Services.Implementations
         public async Task<DetallePedidoDto> EditAsync(int id, DetallePedidoSaveDto saveDto)
         {
             DetallePedido? detallePedido = await _detallePedidoRepository.FindByIdAsync(id);
+
+            if (detallePedido is null)
+            {
+                _logger.LogWarning("DetallePedido no encontrado para el id: " + id);
+                throw DetallePedidoNotFound(id);
+            }
 
             _mapper.Map<DetallePedidoSaveDto, DetallePedido>(saveDto, detallePedido);
 
@@ -81,9 +97,20 @@ namespace Kaits.Application.Services.Implementations
             };
             Expression<Func<DetallePedido, bool>> predicate = x => x.Id == id;
 
-            DetallePedido? pedido = await _detallePedidoRepository.FindByIdAsync(predicate: predicate, includes: includes);
+            DetallePedido? detallePedido = await _detallePedidoRepository.FindByIdAsync(predicate: predicate, includes: includes);
 
-            return _mapper.Map<DetallePedidoDto>(pedido);
+            if (detallePedido is null)
+            {
+                _logger.LogWarning("DetallePedido no encontrado para el id: " + id);
+                throw DetallePedidoNotFound(id);
+            }
+
+            return _mapper.Map<DetallePedidoDto>(detallePedido);
+        }
+
+        private NotFoundCoreException DetallePedidoNotFound(int id)
+        {
+            return new NotFoundCoreException("DetallePedido no encontrado para el id: " + id);
         }
     }
 }

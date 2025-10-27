@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Kaits.Application.Cores.Dtos;
+using Kaits.Application.Cores.Exceptions;
 using Kaits.Application.Dtos.Clientes;
 using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace Kaits.Application.Services.Implementations
@@ -11,12 +13,14 @@ namespace Kaits.Application.Services.Implementations
     public class ClienteService : IClienteService
     {
         private readonly IClienteRepository _clienteRepository;
+        private readonly ILogger<ClienteService> _logger;
         private readonly IMapper _mapper;
 
-        public ClienteService(IClienteRepository clienteRepository, IMapper mapper)
+        public ClienteService(IClienteRepository clienteRepository, IMapper mapper, ILogger<ClienteService> logger)
         {
             _clienteRepository = clienteRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IReadOnlyList<ClienteDto>> FindAllAsync()
@@ -47,9 +51,20 @@ namespace Kaits.Application.Services.Implementations
         {
             Expression<Func<Cliente, bool>> predicate = x => x.Id == id;
 
-            Cliente? producto = await _clienteRepository.FindByIdAsync(predicate: predicate);
+            Cliente? cliente = await _clienteRepository.FindByIdAsync(predicate: predicate);
 
-            return _mapper.Map<ClienteDto>(producto);
+            if (cliente is null)
+            {
+                _logger.LogWarning("Cliente no encontrado para el id: " + id);
+                throw ClienteNotFound(id);
+            }
+
+            return _mapper.Map<ClienteDto>(cliente);
+        }
+
+        private NotFoundCoreException ClienteNotFound(int id)
+        {
+            return new NotFoundCoreException("Cliente no encontrado para el id: " + id);
         }
     }
 }

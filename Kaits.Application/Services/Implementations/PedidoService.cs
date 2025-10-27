@@ -6,6 +6,7 @@ using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Logging;
 
 namespace Kaits.Application.Services.Implementations
 {
@@ -13,13 +14,15 @@ namespace Kaits.Application.Services.Implementations
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IDetallePedidoService _detallePedidoService;
+        private readonly ILogger<PedidoService> _logger;
         private readonly IMapper _mapper;
 
-        public PedidoService(IPedidoRepository pedidoRepository, IMapper mapper, IDetallePedidoService detallePedidoService)
+        public PedidoService(IPedidoRepository pedidoRepository, IMapper mapper, IDetallePedidoService detallePedidoService, ILogger<PedidoService> logger)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
             _detallePedidoService = detallePedidoService;
+            _logger = logger;
         }
 
         public async Task<PedidoDto> CreateAsync(PedidoSaveDto saveDto)
@@ -59,6 +62,12 @@ namespace Kaits.Application.Services.Implementations
         {
             Pedido? pedido = await _pedidoRepository.FindByIdAsync(id);
 
+            if (pedido is null)
+            {
+                _logger.LogWarning("Pedido no encontrado para el id: " + id);
+                throw PedidoNotFound(id);
+            }
+
             pedido.Estado = !pedido.Estado;
 
             await _pedidoRepository.SaveAsync(pedido);
@@ -69,6 +78,12 @@ namespace Kaits.Application.Services.Implementations
         public async Task<PedidoDto> EditAsync(int id, PedidoSaveDto saveDto)
         {
             Pedido? pedido = await _pedidoRepository.FindByIdAsync(id);
+
+            if (pedido is null)
+            {
+                _logger.LogWarning("Pedido no encontrado para el id: " + id);
+                throw PedidoNotFound(id);
+            }
 
             _mapper.Map<PedidoSaveDto, Pedido>(saveDto, pedido);
 
@@ -138,7 +153,18 @@ namespace Kaits.Application.Services.Implementations
 
             Pedido? pedido = await _pedidoRepository.FindByIdAsync(predicate: predicate, includes: includes);
 
+            if (pedido is null)
+            {
+                _logger.LogWarning("Pedido no encontrado para el id: " + id);
+                throw PedidoNotFound(id);
+            }
+
             return _mapper.Map<PedidoDto>(pedido);
+        }
+
+        private NotFoundCoreException PedidoNotFound(int id)
+        {
+            return new NotFoundCoreException("Pedido no encontrado para el id: " + id);
         }
     }
 }

@@ -5,6 +5,7 @@ using Kaits.Application.Dtos.Productos;
 using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace Kaits.Application.Services.Implementations
@@ -12,12 +13,14 @@ namespace Kaits.Application.Services.Implementations
     public class ProductoService : IProductoService
     {
         private readonly IProductoRepository _productoRepository;
+        private readonly ILogger<ProductoService> _logger;
         private readonly IMapper _mapper;
 
-        public ProductoService(IProductoRepository productoRepository, IMapper mapper)
+        public ProductoService(IProductoRepository productoRepository, IMapper mapper, ILogger<ProductoService> logger)
         {
             _productoRepository = productoRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IReadOnlyList<ProductoDto>> FindAllAsync()
@@ -48,7 +51,11 @@ namespace Kaits.Application.Services.Implementations
 
             Producto? producto = await _productoRepository.FindByIdAsync(predicate: predicate);
 
-            if (producto is null) throw ProductoNotFound(id);
+            if (producto is null)
+            {
+                _logger.LogWarning("Producto no encontrado para el id: " + id);
+                throw ProductoNotFound(id);
+            }
 
             return _mapper.Map<ProductoDto>(producto);
         }

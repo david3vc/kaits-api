@@ -3,8 +3,21 @@ using Autofac.Extensions.DependencyInjection;
 using Kaits.Api.Middlewares;
 using Kaits.Application.Cores.Contexts;
 using Kaits.Infrastructure.Cores.Contexts;
+using Serilog.Events;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+    .WriteTo.Console(LogEventLevel.Information)
+    .WriteTo.File(
+        ".." + Path.DirectorySeparatorChar + "logapikaits.log",
+        LogEventLevel.Warning,
+        rollingInterval: RollingInterval.Day
+    )
+    .CreateLogger();
+
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 
