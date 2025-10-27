@@ -22,6 +22,13 @@ namespace Kaits.Api.Controllers
             return await _detallePedidoService.FindAllAsync();
         }
 
+        // GET: api/values
+        [HttpGet("FindAllByIdPedido/{id}")]
+        public async Task<IEnumerable<DetallePedidoDto>> GetByIdPedido(int id)
+        {
+            return await _detallePedidoService.FindAllByIdPedidoAsync(id);
+        }
+
         // GET: api/values/2
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DetallePedidoDto))]

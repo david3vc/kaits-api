@@ -59,6 +59,19 @@ namespace Kaits.Application.Services.Implementations
             return _mapper.Map<IReadOnlyList<DetallePedidoDto>>(detallePedidos);
         }
 
+        public async Task<IReadOnlyList<DetallePedidoDto>> FindAllByIdPedidoAsync(int idPedido)
+        {
+            List<Expression<Func<DetallePedido, object>>>? includes = new List<Expression<Func<DetallePedido, object>>>()
+            {
+                t => t.Producto
+            };
+            Expression<Func<DetallePedido, bool>> predicate = x => x.IdPedido == idPedido;
+
+            IReadOnlyList<DetallePedido> detallePedidos = await _detallePedidoRepository.FindAllAsync(predicate: predicate, includes: includes);
+
+            return _mapper.Map<IReadOnlyList<DetallePedidoDto>>(detallePedidos);
+        }
+
         public async Task<DetallePedidoDto> FindByIdAsync(int id)
         {
             List<Expression<Func<DetallePedido, object>>>? includes = new List<Expression<Func<DetallePedido, object>>>()

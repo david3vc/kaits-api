@@ -5,5 +5,6 @@ namespace Kaits.Application.Services
 {
     public interface IDetallePedidoService : ICrudService<DetallePedidoDto, DetallePedidoSaveDto, int>
     {
+        Task<IReadOnlyList<DetallePedidoDto>> FindAllByIdPedidoAsync(int idPedido);
     }
 }

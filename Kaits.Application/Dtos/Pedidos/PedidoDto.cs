@@ -1,4 +1,5 @@
 ﻿using Kaits.Application.Dtos.Clientes;
+using Kaits.Application.Dtos.DetallePedidos;
 
 namespace Kaits.Application.Dtos.Pedidos
 {
@@ -13,5 +14,6 @@ namespace Kaits.Application.Dtos.Pedidos
         public bool Estado { get; set; }
 
         public ClienteDto Cliente { get; set; }
+        public List<DetallePedidoDto> DetallePedido { get; set; }
     }
 }
