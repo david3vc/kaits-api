@@ -32,16 +32,10 @@ namespace Kaits.UnitTest.Application.Services
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
-        //Task<IReadOnlyList<TDto>> FindAllAsync();
-        //Task<TDto> FindByIdAsync(ID id);
-        //Task<PageResponse<TDto>> FindAllPaginatedAsync(PageRequest<TDtoFilter> request);
-
         [Fact]
         public async void returnProductoDtoWhenFindByIdAsync()
         {
             // Arrange
-
-
             Producto producto = _fixture.Create<Producto>();
 
             _mockProductoRepository
