@@ -57,5 +57,45 @@ namespace Kaits.UnitTest.Application.Services
             // Assert
             Assert.Equal(detallePedido.Count, detallePedidoDtos.Count);
         }
+
+        [Fact]
+        public async void returnDetallePedidosDtoWhenCreateAsync()
+        {
+            // Arrage
+
+            DetallePedido detallePedido = new()
+            {
+                Id = 1,
+                IdPedido = 1,
+                Cantidad = 3,
+                IdProducto = 1,
+                Subtotal = 5,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = true
+            };
+
+            _mockDetallePedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<DetallePedido>()))
+                .ReturnsAsync(detallePedido);
+
+            // Act
+
+            DetallePedidoSaveDto detallePedidoSaveDto = new()
+            {
+                IdPedido = detallePedido.IdPedido,
+                IdProducto = detallePedido.IdProducto,
+                Subtotal = detallePedido.Subtotal,
+                Cantidad = detallePedido.Cantidad
+            };
+
+            IDetallePedidoService detallePedidoService = new DetallePedidoService(_mockDetallePedidoRepository.Object, _mapper, _mockILogger.Object);
+
+            DetallePedidoDto detallePedidoDto = await detallePedidoService.CreateAsync(detallePedidoSaveDto);
+
+            // Assert
+
+            Assert.Equal(detallePedido.Cantidad, detallePedidoDto.Cantidad);
+        }
     }
 }
