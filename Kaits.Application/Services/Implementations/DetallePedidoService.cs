@@ -82,7 +82,7 @@ namespace Kaits.Application.Services.Implementations
                 t => t.Producto
             };
 
-            Expression<Func<DetallePedido, bool>> predicate = x => 
+            Expression<Func<DetallePedido, bool>> predicate = x =>
                 (x.Estado == true)
                 && (x.IdPedido == idPedido);
 
