@@ -5,8 +5,8 @@ using Kaits.Application.Dtos.Pedidos;
 using Kaits.Domain.Cores.Models;
 using Kaits.Domain.Models;
 using Kaits.Domain.Repositories;
-using System.Linq.Expressions;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace Kaits.Application.Services.Implementations
 {

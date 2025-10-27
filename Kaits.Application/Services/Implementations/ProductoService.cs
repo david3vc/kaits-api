@@ -47,9 +47,7 @@ namespace Kaits.Application.Services.Implementations
 
         public async Task<ProductoDto> FindByIdAsync(int id)
         {
-            Expression<Func<Producto, bool>> predicate = x => x.Id == id;
-
-            Producto? producto = await _productoRepository.FindByIdAsync(predicate: predicate);
+            Producto? producto = await _productoRepository.FindByIdAsync(id);
 
             if (producto is null)
             {

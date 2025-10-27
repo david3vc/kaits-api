@@ -3,8 +3,8 @@ using Autofac.Extensions.DependencyInjection;
 using Kaits.Api.Middlewares;
 using Kaits.Application.Cores.Contexts;
 using Kaits.Infrastructure.Cores.Contexts;
-using Serilog.Events;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
