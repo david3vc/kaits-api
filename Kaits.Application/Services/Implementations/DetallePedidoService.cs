@@ -81,7 +81,10 @@ namespace Kaits.Application.Services.Implementations
             {
                 t => t.Producto
             };
-            Expression<Func<DetallePedido, bool>> predicate = x => x.IdPedido == idPedido;
+
+            Expression<Func<DetallePedido, bool>> predicate = x => 
+                (x.Estado == true)
+                && (x.IdPedido == idPedido);
 
             IReadOnlyList<DetallePedido> detallePedidos = await _detallePedidoRepository.FindAllAsync(predicate: predicate, includes: includes);
 
