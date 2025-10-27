@@ -108,6 +108,8 @@ namespace Kaits.Application.Services.Implementations
         public async Task<PageResponse<PedidoDto>> FindAllPaginatedAsync(PageRequest<PedidoFilterDto> request)
         {
             var filter = request.Filter ?? new PedidoFilterDto();
+            var dia = filter.Fecha?.Date;
+            var diaSiguiente = dia?.AddDays(1);
             var paging = new Paging() { PageNumber = request.Page, PageSize = request.PerPage };
 
             List<Expression<Func<Pedido, object>>>? includes = new List<Expression<Func<Pedido, object>>>()
@@ -116,7 +118,7 @@ namespace Kaits.Application.Services.Implementations
             };
 
             Expression<Func<Pedido, bool>> predicate = x =>
-                (!filter.Fecha.HasValue || x.Fecha == filter.Fecha)
+                (!filter.Fecha.HasValue || (x.Fecha >= dia && x.Fecha < diaSiguiente))
                 && (!filter.IdCliente.HasValue || x.IdCliente == filter.IdCliente)
                 && (!filter.Total.HasValue || x.Total == filter.Total)
                 && (!filter.Estado.HasValue || x.Estado == filter.Estado);
