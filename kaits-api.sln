@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaits.Domain", "Kaits.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaits.Infrastructure", "Kaits.Infrastructure\Kaits.Infrastructure.csproj", "{3C676D74-E48A-46EB-AD7F-FD0355F3BBE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaits.UnitTest", "Kaits.UnitTest\Kaits.UnitTest.csproj", "{43F3165F-5F04-431B-A85C-B9FE4182527A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaits.UnitTest", "Kaits.UnitTest\Kaits.UnitTest.csproj", "{43F3165F-5F04-431B-A85C-B9FE4182527A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
