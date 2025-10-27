@@ -1,4 +1,5 @@
-﻿using Kaits.Application.Dtos.DetallePedidos;
+﻿using Kaits.Api.Exceptions;
+using Kaits.Application.Dtos.DetallePedidos;
 using Kaits.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ namespace Kaits.Api.Controllers
         // GET: api/values/2
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DetallePedidoDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
         public async Task<Results<NotFound, Ok<DetallePedidoDto>>> Get(int id)
         {
             var response = await _detallePedidoService.FindByIdAsync(id);
@@ -51,6 +53,7 @@ namespace Kaits.Api.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
         public async Task<DetallePedidoDto> Put(int id, [FromBody] DetallePedidoSaveDto saveDto)
         {
             return await _detallePedidoService.EditAsync(id, saveDto);
@@ -58,6 +61,7 @@ namespace Kaits.Api.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
         public async Task<DetallePedidoDto> Delete(int id)
         {
             return await _detallePedidoService.DisabledAsync(id);

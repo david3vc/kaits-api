@@ -1,4 +1,5 @@
-﻿using Kaits.Application.Cores.Dtos;
+﻿using Kaits.Api.Exceptions;
+using Kaits.Application.Cores.Dtos;
 using Kaits.Application.Dtos.Clientes;
 using Kaits.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -26,6 +27,7 @@ namespace Kaits.Api.Controllers
         // GET: api/values/2
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClienteDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
         public async Task<Results<NotFound, Ok<ClienteDto>>> Get(int id)
         {
             var response = await _clienteService.FindByIdAsync(id);
