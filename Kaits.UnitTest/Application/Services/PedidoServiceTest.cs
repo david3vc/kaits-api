@@ -59,5 +59,120 @@ namespace Kaits.UnitTest.Application.Services
             // Assert
             Assert.Equal(pedidos.Count, pedidoDtos.Count);
         }
+
+        [Fact]
+        public async void returnPedidosDtoWhenCreateAsync()
+        {
+            // Arrage
+
+            Pedido pedido = new()
+            {
+                Id = 1,
+                Fecha = DateTime.Now,
+                IdCliente = 3,
+                Total = 14,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = true
+            };
+
+            _mockPedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<Pedido>()))
+                .ReturnsAsync(pedido);
+
+            // Act
+
+            PedidoSaveDto pedidoSaveDto = new()
+            {
+                Fecha = pedido.Fecha,
+                IdCliente = pedido.IdCliente,
+                Total = pedido.Total
+            };
+
+            IPedidoService pedidoService = new PedidoService(_mockPedidoRepository.Object, _mapper, _mockDetallePedidoService.Object, _mockILogger.Object);
+
+            PedidoDto pedidoDto = await pedidoService.CreateAsync(pedidoSaveDto);
+
+            // Assert
+
+            Assert.Equal(pedido.IdCliente, pedidoDto.IdCliente);
+        }
+
+        [Fact]
+        public async void returnPedidosDtoWhenEditAsync()
+        {
+            // Arrage
+            int id = 1;
+            Pedido pedido = new()
+            {
+                Id = 1,
+                Fecha = DateTime.Now,
+                IdCliente = 3,
+                Total = 14,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = true
+            };
+            _mockPedidoRepository
+                .Setup(r => r.FindByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(pedido);
+
+            _mockPedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<Pedido>()))
+                .ReturnsAsync(pedido);
+
+
+            // Act
+
+            PedidoSaveDto pedidoSaveDto = new()
+            {
+                Fecha = pedido.Fecha,
+                IdCliente = pedido.IdCliente,
+                Total = pedido.Total
+            };
+
+            IPedidoService pedidoService = new PedidoService(_mockPedidoRepository.Object, _mapper, _mockDetallePedidoService.Object, _mockILogger.Object);
+
+            PedidoDto pedidoDto = await pedidoService.EditAsync(id, pedidoSaveDto);
+
+            // Assert
+
+            Assert.Equal(pedido.IdCliente, pedidoDto.IdCliente);
+        }
+
+        [Fact]
+        public async void returnPedidosDtoWhenDisabledAsync()
+        {
+            // Arrage
+            int id = 1;
+            Pedido pedido = new()
+            {
+                Id = 1,
+                Fecha = DateTime.Now,
+                IdCliente = 3,
+                Total = 14,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = true
+            };
+            _mockPedidoRepository
+                .Setup(r => r.FindByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(pedido);
+
+            _mockPedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<Pedido>()))
+                .ReturnsAsync(pedido);
+
+
+            // Act
+
+            IPedidoService pedidoService = new PedidoService(_mockPedidoRepository.Object, _mapper, _mockDetallePedidoService.Object, _mockILogger.Object);
+
+            PedidoDto pedidoDto = await pedidoService.DisabledAsync(id);
+
+            // Assert
+
+            Assert.Equal(pedido.IdCliente, pedidoDto.IdCliente);
+        }
     }
 }
