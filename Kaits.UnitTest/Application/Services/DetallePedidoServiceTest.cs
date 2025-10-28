@@ -97,5 +97,85 @@ namespace Kaits.UnitTest.Application.Services
 
             Assert.Equal(detallePedido.Cantidad, detallePedidoDto.Cantidad);
         }
+
+        [Fact]
+        public async void returnDetallePedidosDtoWhenEditAsync()
+        {
+            // Arrage
+            int id = 1;
+            DetallePedido detallePedido = new()
+            {
+                Id = 1,
+                IdPedido = 1,
+                Cantidad = 3,
+                IdProducto = 1,
+                Subtotal = 5,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = true
+            };
+            _mockDetallePedidoRepository
+                .Setup(r => r.FindByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(detallePedido);
+
+            _mockDetallePedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<DetallePedido>()))
+                .ReturnsAsync(detallePedido);
+
+
+            // Act
+
+            DetallePedidoSaveDto detallePedidoSaveDto = new()
+            {
+                IdPedido = detallePedido.IdPedido,
+                IdProducto = detallePedido.IdProducto,
+                Subtotal = detallePedido.Subtotal,
+                Cantidad = detallePedido.Cantidad
+            };
+
+            IDetallePedidoService detallePedidoService = new DetallePedidoService(_mockDetallePedidoRepository.Object, _mapper, _mockILogger.Object);
+
+            DetallePedidoDto detallePedidoDto = await detallePedidoService.EditAsync(id, detallePedidoSaveDto);
+
+            // Assert
+
+            Assert.Equal(detallePedido.IdPedido, detallePedidoDto.IdPedido);
+        }
+
+        [Fact]
+        public async void returnDetallePedidosDtoWhenDisabledAsync()
+        {
+            // Arrage
+            int id = 1;
+            DetallePedido detallePedido = new()
+            {
+                Id = 1,
+                IdPedido = 1,
+                Cantidad = 3,
+                IdProducto = 1,
+                Subtotal = 5,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = null,
+                Estado = false
+            };
+            _mockDetallePedidoRepository
+                .Setup(r => r.FindByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(detallePedido);
+
+            _mockDetallePedidoRepository
+                .Setup(r => r.SaveAsync(It.IsAny<DetallePedido>()))
+                .ReturnsAsync(detallePedido);
+
+
+            // Act
+
+            IDetallePedidoService detallePedidoService = new DetallePedidoService(_mockDetallePedidoRepository.Object, _mapper, _mockILogger.Object);
+
+            DetallePedidoDto detallePedidoDto = await detallePedidoService.DisabledAsync(id);
+
+            // Assert
+
+            Assert.Equal(detallePedido.IdProducto, detallePedidoDto.IdProducto);
+        }
     }
 }
